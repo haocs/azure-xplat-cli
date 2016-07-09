@@ -4,7 +4,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV NODEJS_APT_ROOT "node_4.x"
 ENV NODEJS_VERSION "4.2.4"
-ENV AZURECLITEMP /opt/azure-cli
+ENV AZURECLITEMP /tmp/azure-cli
 
 RUN apt-get update -qq && \
     apt-get install -qqy --no-install-recommends\
@@ -24,11 +24,12 @@ RUN apt-get update -qq && \
       dpkg -i node.deb && \
       rm node.deb
 
-COPY ./ AZURECLITEMP/
-RUN cd $AZURECLITEMP/
-RUN npm install ./ -g
+ADD ./ $AZURECLITEMP
+RUN cd $AZURECLITEMP && \
+	npm install ./ -g
+RUN rm -rf $AZURECLITEMP
 
-RUN azure telemtry -d && \
+RUN azure telemetry -d && \
 	azure config mode arm
 
 ENV EDITOR vim
