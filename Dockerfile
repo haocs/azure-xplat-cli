@@ -21,15 +21,24 @@ RUN apt-get update -qq && \
       jq && \
     rm -rf /var/lib/apt/lists/* && \
     curl https://deb.nodesource.com/${NODEJS_APT_ROOT}/pool/main/n/nodejs/nodejs_${NODEJS_VERSION}-1nodesource1~jessie1_amd64.deb > node.deb && \
-      dpkg -i node.deb && \
-      rm node.deb
+    dpkg -i node.deb && \
+    rm node.deb
 
 ADD ./ $AZURECLITEMP
+
 RUN cd $AZURECLITEMP && \
-	npm install ./ -g
+    npm install && \
+    node node_modules/streamline/bin/_node -c lib && \
+    find lib/ -name "*._js" -delete && \
+    node bin/azure telemetry -d && \
+    node bin/azure --gen && \
+    npm install ./ -g
+
+Run azure --completion >> ~/azure.completion.sh && \
+    echo 'source ~/azure.completion.sh' >> ~/.bashrc && \
+    azure config mode arm
+
 RUN rm -rf $AZURECLITEMP
 
-RUN azure telemetry -d && \
-	azure config mode arm
-
 ENV EDITOR vim
+
