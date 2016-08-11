@@ -86,6 +86,7 @@
     "jsonlint": "1.6.2",
     "jsrsasign": "4.8.2 ",
     "kuduscript": "1.0.8",
+    "mkdirp": "^0.5.1",
     "moment": "^2.8.0",
     "ms-rest": "^1.12.0",
     "ms-rest-azure": "^1.12.0",
